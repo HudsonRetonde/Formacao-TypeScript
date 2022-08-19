@@ -35,11 +35,29 @@ export class NegociacaoController {
         } 
 
         this.negociacoes.adiciona(negociacao);
-            this.limparFormulario();
-            this.atualizaView();
+        console.log(negociacao.paraTexto());
+        console.log(this.negociacoes.paraTexto());
+        this.limparFormulario();
+        this.atualizaView();
         
         const t2 = performance.now();
         console.log(`Tempo de execução do método adciona: ${t2 - t1} segundos.`);
+    }
+
+    public importaDados(): void {
+        fetch('http://localhost:8080/dados')
+            .then(res => res.json())
+            .then((dados: any[]) =>{
+                dados.map(dadosDeHoje =>{
+                    return new Negociacao(new Date(), dadosDeHoje.vezes, dadosDeHoje.montante)
+                })
+            })
+            .then((negociacoesDeHoje: any) => {
+                for(let negociacao of negociacoesDeHoje) {
+                    this.negociacoes.adiciona(negociacao);
+                }
+                this.negociacoesView.update(this.negociacoes);
+            })
     }
 
     private ehDiaUtil(data: Date){
