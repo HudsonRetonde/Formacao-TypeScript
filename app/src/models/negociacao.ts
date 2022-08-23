@@ -1,4 +1,7 @@
 export class Negociacao {
+    paraTexto(): any {
+        throw new Error('Method not implemented.');
+    }
     constructor(
         private _data: Date, 
         public readonly quantidade: number, 

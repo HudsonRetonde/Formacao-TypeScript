@@ -1,9 +1,10 @@
-import { NegociacoesDoDia } from './../src/interfaces/negociacao-do-dia.js';
+import { NegociacoesService } from './../src/services/negociacoes-service';
 import { DiasDaSemana } from './../enums/dias-da-semana.js';
 import { MensagemView } from './../views/mensagem-view.js';
 import { Negociacao } from '../models/negociacao.js';
 import { Negociacoes } from '../models/negociacoes.js';
 import { NegociacoesView } from '../views/negociacoes-view.js';
+import { imprimir } from '../utils/imprimir.js';
 
 export class NegociacaoController {
     private inputData: HTMLInputElement;
@@ -12,6 +13,7 @@ export class NegociacaoController {
     private negociacoes = new Negociacoes();
     private negociacoesView = new NegociacoesView('#negociacoesView');
     private mensagemView = new MensagemView('#mensagemView');
+    private negociacoesService = new NegociacoesService();
 
 
     constructor() {
@@ -36,23 +38,20 @@ export class NegociacaoController {
         } 
 
         this.negociacoes.adiciona(negociacao);
-        console.log(negociacao.paraTexto());
-        console.log(this.negociacoes.paraTexto());
+        imprimir(negociacao, this.negociacoes);
         this.limparFormulario();
         this.atualizaView();
         
-        const t2 = performance.now();
-        console.log(`Tempo de execução do método adciona: ${t2 - t1} segundos.`);
-    }
+        }
 
     public importaDados(): void {
-       /*
-            .then((negociacoesDeHoje) => {
+        this.negociacoesService.obterNegociacoesDoDia()
+        .then((negociacoesDeHoje) => {
                 for(let negociacao of negociacoesDeHoje) {
                     this.negociacoes.adiciona(negociacao);
                 }
                 this.negociacoesView.update(this.negociacoes);
-            }) */
+            })
     }
 
     private ehDiaUtil(data: Date){
